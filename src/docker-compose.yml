@@ -1,0 +1,14 @@
+version: '3.4'
+
+services:
+  ingress-api:
+    image: sample-cloudgen/ingress-api
+    build:
+      context: .
+      dockerfile: Sample.ContainerApps/Dockerfile
+
+  business-logic:
+    image: sample-cloudgen/business-logic
+    build:
+      context: .
+      dockerfile: Sample.ContainerApps.BusinessLogic/Dockerfile
