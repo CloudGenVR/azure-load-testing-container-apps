@@ -37,11 +37,11 @@ jobs:
 
       # Login against a Docker registry except on PR
       # https://github.com/docker/login-action
-      - name: Log into registry ${{ env.REGISTRY }}
+      - name: Log into registry ${{ env.REGISTRYNAME }}
         if: github.event_name != 'pull_request'
         uses: docker/login-action@v1
         with:
-          registry: azureday.azurecr.io
+          registry: ${{ env.REGISTRYNAME }}
           username: ${{ env.REGISTRYUSER }}
           password: ${{ env.REGISTRYPASSWORD }}
 
@@ -71,7 +71,7 @@ jobs:
 
       - name: Output image tag
         id: image-tag
-        run: echo "::set-output name=image-${{ matrix.services.imageName }}::${{ env.REGISTRY }}/${{ env.IMAGE_NAME }}/${{ matrix.services.imageName }}:sha-$(git rev-parse --short HEAD)" | tr '[:upper:]' '[:lower:]'
+        run: echo "::set-output name=image-${{ matrix.services.imageName }}::${{ env.REGISTRYNAME }}/${{ env.IMAGE_NAME }}/${{ matrix.services.imageName }}:sha-$(git rev-parse --short HEAD)" | tr '[:upper:]' '[:lower:]'
  
   deploy:
     runs-on: ubuntu-latest
@@ -99,7 +99,7 @@ jobs:
                   ContainerAppIngressImage='${{ needs.build.outputs.containerImage-node }}' \
                   ContainerAppIngressPort=80 \
                   ContainerAppIngressIsExternalIngress=true \
-                  containerRegistry=azureday.azurecr.io \
+                  containerRegistry=${{ env.REGISTRYNAME }} \
                   containerRegistryUsername=${{ env.REGISTRYUSER }} \
                   containerRegistryPassword=${{ env.REGISTRYPASSWORD }} \
                   tags="$tags" \              
@@ -118,7 +118,7 @@ jobs:
                   ContainerAppIngressImage='${{ needs.build.outputs.containerImage-node }}' \
                   ContainerAppIngressPort=80 \
                   ContainerAppIngressIsExternalIngress=true \
-                  containerRegistry=azureday.azurecr.io \
+                  containerRegistry=${{ env.REGISTRYNAME }} \
                   containerRegistryUsername=${{ env.REGISTRYUSER }} \
                   containerRegistryPassword=${{ env.REGISTRYPASSWORD }} \
                   tags="$tags" \
