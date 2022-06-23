@@ -96,9 +96,9 @@ jobs:
               --resource-group ${{ env.RESOURCE_GROUP }} \
               --template-file src/deploy/main.bicep \
               --parameters \
-                  IngresContainerAppImage='${{ needs.build.outputs.containerImage-node }}' \
-                  nodePort=3000 \
-                  nodeIsExternalIngress=true \
+                  ContainerAppIngressImage  ='${{ needs.build.outputs.containerImage-node }}' \
+                  ContainerAppIngressPort=80 \
+                  ContainerAppIngressIsExternalIngress=true \
                   containerRegistry=${{ env.REGISTRY }} \
                   containerRegistryUsername=${{ github.actor }} \
                   containerRegistryPassword=${{ secrets.PACKAGES_TOKEN }} \
@@ -116,9 +116,9 @@ jobs:
               --resource-group ${{ env.RESOURCE_GROUP }} \
               --template-file src/deploy/main.bicep \
               --parameters \
-                  IngresContainerAppImage='${{ needs.build.outputs.containerImage-node }}' \
-                  nodePort=3000 \
-                  nodeIsExternalIngress=true \
+                  ContainerAppIngressImage  ='${{ needs.build.outputs.containerImage-node }}' \
+                  ContainerAppIngressPort=80 \
+                  ContainerAppIngressIsExternalIngress=true \
                   containerRegistry=${{ env.REGISTRY }} \
                   containerRegistryUsername=${{ github.actor }} \
                   containerRegistryPassword=${{ secrets.PACKAGES_TOKEN }} \
