@@ -150,7 +150,7 @@ resource containerAppBusiness 'Microsoft.App/containerApps@2022-01-01-preview' =
           transport: 'auto'
           env: [
             {
-              name: 'APPSETTINGS_Clients_BusinessLogic'
+              name: 'APPSETTINGS_CLIENTS_BUSINESSLOGIC'
               secretref: APPSETTINGS_Clients_BusinessLogic
             }             
           ]
