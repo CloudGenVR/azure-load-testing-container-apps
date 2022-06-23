@@ -23,11 +23,11 @@ var location = resourceGroup().location
 var environmentName = 'env-${uniqueString(resourceGroup().id)}'
 var minReplicas = 0
 
-var containerAppIngressServiceAppName = 'container-app-ingress'
 var workspaceName = 'container-app-log-analytics'
 var appInsightsName = 'container-app-insights'
 
 var containerAppBusinessServiceAppName = 'container-app-business'
+var containerAppIngressServiceAppName = 'container-app-ingress'
 
 
 var containerRegistryPasswordRef = 'container-registry-password'
