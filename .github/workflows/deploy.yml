@@ -14,8 +14,8 @@ on:
   workflow_dispatch:
 
 env:
-  RESOURCE_GROUP: AzureDay2022
-  REGISTRY: azuredaycr.azurecr.io
+  RESOURCE_GROUP: rg-aca
+  REGISTRY: ghcr.io
   IMAGE_NAME: ${{ github.repository }}
 
 jobs:
@@ -24,7 +24,7 @@ jobs:
     strategy:
       matrix:
         services:
-          [{ 'imageName': 'node-service', 'directory': './node-service' }]
+          [{ 'imageName': 'sample-containerapp-ingress', 'directory': './Sample.ContainerApps' }]
     permissions:
       contents: read
       packages: write
@@ -92,7 +92,7 @@ jobs:
             tags='{"owner":"MarcoZama", "email":"marco.zamana1@gmail.com"}'
             az deployment group create \
               --resource-group ${{ env.RESOURCE_GROUP }} \
-              --template-file ./infra/main.bicep \
+              --template-file ./deploy/main.bicep \
               --parameters \
                   nodeImage='${{ needs.build.outputs.containerImage-node }}' \
                   nodePort=3000 \
@@ -100,17 +100,19 @@ jobs:
                   containerRegistry=${{ env.REGISTRY }} \
                   containerRegistryUsername=${{ github.actor }} \
                   containerRegistryPassword=${{ secrets.PACKAGES_TOKEN }} \
-                  tags="$tags"
+                  tags="$tags" \
+                  APPSETTINGS_API_KEY="${{ secrets.APPSETTINGS_API_KEY }}"
+             
 
       - name: What-if bicep
         uses: azure/CLI@v1
         if: github.event_name == 'pull_request'
         with:
           inlineScript: |
-            tags='{"owner":"MarcoZama", "email":"marco.zamana1@gmail.com"}'
+            tags='{"owner":"johnnyreilly", "email":"johnny_reilly@hotmail.com"}'
             az deployment group what-if \
               --resource-group ${{ env.RESOURCE_GROUP }} \
-              --template-file ./infra/main.bicep \
+              --template-file ./deploy/main.bicep \
               --parameters \
                   nodeImage='${{ needs.build.outputs.containerImage-node }}' \
                   nodePort=3000 \
@@ -118,4 +120,6 @@ jobs:
                   containerRegistry=${{ env.REGISTRY }} \
                   containerRegistryUsername=${{ github.actor }} \
                   containerRegistryPassword=${{ secrets.PACKAGES_TOKEN }} \
-                  tags="$tags"
+                  tags="$tags" \
+                  APPSETTINGS_API_KEY="${{ secrets.APPSETTINGS_API_KEY }}" \
+                  
