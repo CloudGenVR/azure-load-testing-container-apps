@@ -96,7 +96,7 @@ resource containerAppIngress 'Microsoft.App/containerApps@2022-01-01-preview' = 
       ]
       ingress: {
         'external': ContainerAppIngressIsExternalIngress
-        'targetPort': ContainerAppBusinessPort
+        'targetPort': ContainerAppIngressPort
       }
     }
     template: {
