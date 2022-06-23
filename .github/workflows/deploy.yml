@@ -37,13 +37,13 @@ jobs:
 
       # Login against a Docker registry except on PR
       # https://github.com/docker/login-action
-      - name: Log into registry ${{ env.REGISTRYNAME }}
+      - name: Log into registry ${{ secrets.REGISTRYNAME }}
         if: github.event_name != 'pull_request'
         uses: docker/login-action@v1
         with:
-          registry: ${{ env.REGISTRYNAME }}
-          username: ${{ env.REGISTRYUSER }}
-          password: ${{ env.REGISTRYPASSWORD }}
+          registry: ${{ secrets.REGISTRYNAME }}
+          username: ${{ secrets.REGISTRYUSER }}
+          password: ${{ secrets.REGISTRYPASSWORD }}
 
       # Extract metadata (tags, labels) for Docker
       # https://github.com/docker/metadata-action
@@ -99,9 +99,9 @@ jobs:
                   ContainerAppIngressImage='${{ needs.build.outputs.containerImage-node }}' \
                   ContainerAppIngressPort=80 \
                   ContainerAppIngressIsExternalIngress=true \
-                  containerRegistry=${{ env.REGISTRYNAME }} \
-                  containerRegistryUsername=${{ env.REGISTRYUSER }} \
-                  containerRegistryPassword=${{ env.REGISTRYPASSWORD }} \
+                  containerRegistry=${{ secrets.REGISTRYNAME }} \
+                  containerRegistryUsername=${{ secrets.REGISTRYUSER }} \
+                  containerRegistryPassword=${{ secrets.REGISTRYPASSWORD }} \
                   tags="$tags" \              
              
 
