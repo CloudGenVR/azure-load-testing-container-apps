@@ -26,8 +26,8 @@ var minReplicas = 0
 var workspaceName = 'container-app-log-analytics'
 var appInsightsName = 'container-app-insights'
 
-var containerAppBusinessServiceAppName = 'container-app-business'
-var containerAppIngressServiceAppName = 'container-app-ingress'
+//var containerAppBusinessServiceAppName = 'container-app-business'
+var containerAppIngressServiceAppName = 'samplecontainerapp-ingress'
 
 
 var containerRegistryPasswordRef = 'container-registry-password'
