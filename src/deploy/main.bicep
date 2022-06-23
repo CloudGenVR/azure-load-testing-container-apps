@@ -1,75 +1,120 @@
-param location string = resourceGroup().location
-param envName string = 'blog-sample'
+param nodeImage string
+param nodePort int
+param nodeIsExternalIngress bool
 
-param containerImage string
-param containerPort int
-param registry string
-param registryUsername string
+param containerRegistry string
+param containerRegistryUsername string
+@secure()
+param containerRegistryPassword string
+
+param tags object
 
 @secure()
-param registryPassword string
+param APPSETTINGS_API_KEY string
+/*param APPSETTINGS_DOMAIN string
+param APPSETTINGS_FROM_EMAIL string
+param APPSETTINGS_RECIPIENT_EMAIL string */
 
-module law 'law.bicep' = {
-    name: 'log-analytics-workspace'
-    params: {
-      location: location
-      name: 'law-${envName}'
+var location = resourceGroup().location
+var environmentName = 'env-${uniqueString(resourceGroup().id)}'
+var minReplicas = 0
+
+var nodeServiceAppName = 'node-app'
+var workspaceName = 'workspace-zureday2022WfgL'
+var appInsightsName = '${nodeServiceAppName}-app-insights'
+
+var containerRegistryPasswordRef = 'container-registry-password'
+var mailgunApiKeyRef = 'mailgun-api-key'
+
+
+
+//Log analitycs workspace
+resource workspace 'Microsoft.OperationalInsights/workspaces@2020-03-01-preview' = {
+    name: workspaceName
+    location: location
+    tags: tags
+    properties: {
+      sku: {
+        name: 'PerGB2018'
+      }
+      retentionInDays: 30
+      workspaceCapping: {}
     }
 }
 
-module containerAppEnvironment 'environment.bicep' = {
-  name: 'container-app-environment'
-  params: {
-    name: envName
-    location: location
-    lawClientId:law.outputs.clientId
-    lawClientSecret: law.outputs.clientSecret
+resource appInsights 'Microsoft.Insights/components@2020-02-02' = {
+  name: appInsightsName
+  location: location
+  tags: tags
+  kind: 'web'
+  properties: {
+    Application_Type: 'web'
+    Flow_Type: 'Bluefield'
   }
 }
 
-module containerAppIngress 'containerappIngress.bicep' = {
-  name: 'containerAppIngress'
-  params: {
-    name: 'containerAppIngress'
-    location: location
-    containerAppEnvironmentId: containerAppEnvironment.outputs.id
-    containerImage: containerImage
-    containerPort: containerPort
-    envVars: [
+resource environment 'Microsoft.App/managedEnvironments@2022-01-01-preview' = {
+  name: environmentName
+  location: location
+  tags: tags
+  properties: {
+    appLogsConfiguration: {
+      destination: 'log-analytics'
+      logAnalyticsConfiguration: {
+        customerId: workspace.properties.customerId
+        sharedKey: listKeys(workspace.id, workspace.apiVersion).primarySharedKey
+      }
+    }
+  }
+}
+
+resource containerApp 'Microsoft.App/containerApps@2022-01-01-preview' = {
+  name: nodeServiceAppName
+  kind: 'containerapps'
+  tags: tags
+  location: location
+  properties: {
+    managedEnvironmentId: environment.id
+    configuration: {
+      secrets: [
         {
-        name: 'ASPNETCORE_ENVIRONMENT'
-        value: 'Production'
+          name: containerRegistryPasswordRef
+          value: containerRegistryPassword
         }
-    ]
-    useExternalIngress: true
-    registry: registry
-    registryUsername: registryUsername
-    registryPassword: registryPassword
-
-  }
-}
-
-module containerAppBusiness 'containerappIngress.bicep' = {
-  name: 'containerAppBusiness'
-  params: {
-    name: 'containerAppBusiness'
-    location: location
-    containerAppEnvironmentId: containerAppEnvironment.outputs.id
-    containerImage: containerImage
-    containerPort: containerPort
-    envVars: [
         {
-        name: 'ASPNETCORE_ENVIRONMENT'
-        value: 'Production'
+          name: mailgunApiKeyRef
+          value: APPSETTINGS_API_KEY
         }
-    ]
-    useExternalIngress: true
-    registry: registry
-    registryUsername: registryUsername
-    registryPassword: registryPassword
-
+      ]
+      registries: [
+        {
+          server: containerRegistry
+          username: containerRegistryUsername
+          passwordSecretRef: containerRegistryPasswordRef
+        }
+      ]
+      ingress: {
+        'external': nodeIsExternalIngress
+        'targetPort': nodePort
+      }
+    }
+    template: {
+      containers: [
+        {
+          image: nodeImage
+          name: nodeServiceAppName
+          transport: 'auto'
+          env: [
+            {
+              name: 'APPSETTINGS_API_KEY'
+              secretref: mailgunApiKeyRef
+            }                    
+          ]
+        }
+      ]
+      scale: {
+        minReplicas: minReplicas
+      }
+    }
   }
 }
-
-output fqdnIngress string = containerAppIngress.outputs.fqdn
-output fqdnBusiness string = containerAppBusiness.outputs.fqdn
