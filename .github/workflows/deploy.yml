@@ -24,7 +24,7 @@ jobs:
     strategy:
       matrix:
         services:
-          [{ 'imageName': 'sample-containerapp-ingress', 'directory': './src/Sample.ContainerApps' }]
+          [{ 'imageName': 'sample-containerapp-ingress', 'directory': './src/Sample.ContainerApps/' }]
     permissions:
       contents: read
       packages: write
