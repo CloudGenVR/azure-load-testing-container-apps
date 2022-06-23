@@ -16,7 +16,7 @@ param containerRegistryPassword string
 param tags object
 
 
-@secure()
+//@secure()
 //param APPSETTINGS_Clients_BusinessLogic string
 
 var location = resourceGroup().location
