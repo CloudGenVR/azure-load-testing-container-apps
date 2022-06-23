@@ -2,9 +2,9 @@ param ContainerAppIngressImage string
 param ContainerAppIngressPort int
 param ContainerAppIngressIsExternalIngress bool
 
-param ContainerAppBusinessPort string
-param ContainerAppBusinessIsExternalIngress bool
-param ContainerAppBusinessImage string
+//param ContainerAppBusinessPort string
+//param ContainerAppBusinessIsExternalIngress bool
+//param ContainerAppBusinessImage string
 
 
 
@@ -17,7 +17,7 @@ param tags object
 
 
 @secure()
-param APPSETTINGS_Clients_BusinessLogic string
+//param APPSETTINGS_Clients_BusinessLogic string
 
 var location = resourceGroup().location
 var environmentName = 'env-${uniqueString(resourceGroup().id)}'
@@ -116,6 +116,7 @@ resource containerAppIngress 'Microsoft.App/containerApps@2022-01-01-preview' = 
   }
 }
 
+/*
 resource containerAppBusiness 'Microsoft.App/containerApps@2022-01-01-preview' = {
   name: containerAppBusinessServiceAppName
   kind: 'containerapps'
@@ -162,3 +163,4 @@ resource containerAppBusiness 'Microsoft.App/containerApps@2022-01-01-preview' =
     }
   }
 }
+*/
