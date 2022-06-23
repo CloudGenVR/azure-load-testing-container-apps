@@ -94,7 +94,7 @@ jobs:
               --resource-group ${{ env.RESOURCE_GROUP }} \
               --template-file src/deploy/main.bicep \
               --parameters \
-                  nodeImage='${{ needs.build.outputs.containerImage-node }}' \
+                  IngresContainerAppImage='${{ needs.build.outputs.containerImage-node }}' \
                   nodePort=3000 \
                   nodeIsExternalIngress=true \
                   containerRegistry=${{ env.REGISTRY }} \
@@ -109,12 +109,12 @@ jobs:
         if: github.event_name == 'pull_request'
         with:
           inlineScript: |
-            tags='{"owner":"johnnyreilly", "email":"johnny_reilly@hotmail.com"}'
+            tags='{"owner":"MarcoZama", "email":"marco.zamana1@gmail.com"}'
             az deployment group what-if \
               --resource-group ${{ env.RESOURCE_GROUP }} \
-              --template-file ../src/deploy/main.bicep \
+              --template-file src/deploy/main.bicep \
               --parameters \
-                  nodeImage='${{ needs.build.outputs.containerImage-node }}' \
+                  IngresContainerAppImage='${{ needs.build.outputs.containerImage-node }}' \
                   nodePort=3000 \
                   nodeIsExternalIngress=true \
                   containerRegistry=${{ env.REGISTRY }} \
