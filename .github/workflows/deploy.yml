@@ -17,7 +17,7 @@ on:
 env:
   RESOURCE_GROUP: rg-azureday
   REGISTRY: azureday.azurecr.io
-  IMAGE_NAME: ${{ github.repository }}
+  IMAGE_NAME: samplecontainerappingress
 
 jobs:
   build:
@@ -25,7 +25,7 @@ jobs:
     strategy:
       matrix:
         services:
-          [{ 'imageName': 'samplecontainerapp-ingress', 'directory': './src/Sample.ContainerApps/' }]
+          [{ 'imageName': 'samplecontainerappingress', 'directory': './src/Sample.ContainerApps/' }]
     permissions:
       contents: read
       packages: write
