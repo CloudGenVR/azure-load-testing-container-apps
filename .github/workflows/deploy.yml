@@ -15,8 +15,8 @@ on:
 
 
 env:
-  RESOURCE_GROUP: rg-aca
-  REGISTRY: ghcr.io
+  RESOURCE_GROUP: rg-azureday
+  REGISTRY: ${{ env.REGISTRYNAME }}
   IMAGE_NAME: ${{ github.repository }}
 
 jobs:
