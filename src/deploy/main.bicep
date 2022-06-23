@@ -101,10 +101,10 @@ resource containerApp 'Microsoft.App/containerApps@2022-01-01-preview' = {
           name: IngressServiceAppName
           transport: 'auto'
           env: [
-            {
+            /*{
               name: 'APPSETTINGS_API_KEY'
               secretref: mailgunApiKeyRef
-            }                    
+            } */                   
           ]
         }
       ]
