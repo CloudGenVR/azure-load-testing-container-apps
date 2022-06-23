@@ -25,7 +25,7 @@ jobs:
     strategy:
       matrix:
         services:
-          [{ 'imageName': 'sample-containerapp-ingress', 'directory': './src/Sample.ContainerApps/' }]
+          [{ 'imageName': 'samplecontainerapp-ingress', 'directory': './src/Sample.ContainerApps/' }]
     permissions:
       contents: read
       packages: write
@@ -96,7 +96,7 @@ jobs:
               --resource-group ${{ env.RESOURCE_GROUP }} \
               --template-file src/deploy/main.bicep \
               --parameters \
-                  ContainerAppIngressImage  ='${{ needs.build.outputs.containerImage-node }}' \
+                  ContainerAppIngressImage='${{ needs.build.outputs.containerImage-node }}' \
                   ContainerAppIngressPort=80 \
                   ContainerAppIngressIsExternalIngress=true \
                   containerRegistry=${{ env.REGISTRY }} \
@@ -116,7 +116,7 @@ jobs:
               --resource-group ${{ env.RESOURCE_GROUP }} \
               --template-file src/deploy/main.bicep \
               --parameters \
-                  ContainerAppIngressImage  ='${{ needs.build.outputs.containerImage-node }}' \
+                  ContainerAppIngressImage='${{ needs.build.outputs.containerImage-node }}' \
                   ContainerAppIngressPort=80 \
                   ContainerAppIngressIsExternalIngress=true \
                   containerRegistry=${{ env.REGISTRY }} \
