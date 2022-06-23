@@ -92,7 +92,7 @@ jobs:
             tags='{"owner":"MarcoZama", "email":"marco.zamana1@gmail.com"}'
             az deployment group create \
               --resource-group ${{ env.RESOURCE_GROUP }} \
-              --template-file /src/deploy/main.bicep \
+              --template-file ../../src/deploy/main.bicep \
               --parameters \
                   nodeImage='${{ needs.build.outputs.containerImage-node }}' \
                   nodePort=3000 \
@@ -112,7 +112,7 @@ jobs:
             tags='{"owner":"johnnyreilly", "email":"johnny_reilly@hotmail.com"}'
             az deployment group what-if \
               --resource-group ${{ env.RESOURCE_GROUP }} \
-              --template-file /src/deploy/main.bicep \
+              --template-file ../../src/deploy/main.bicep \
               --parameters \
                   nodeImage='${{ needs.build.outputs.containerImage-node }}' \
                   nodePort=3000 \
