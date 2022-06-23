@@ -7,8 +7,8 @@ EXPOSE 443
 
 FROM mcr.microsoft.com/dotnet/sdk:6.0 AS build
 WORKDIR /src/Sample.ContainerApps
-COPY ["Sample.ContainerApps.csproj", "Sample.ContainerApps/"]
-RUN dotnet restore "Sample.ContainerApps/Sample.ContainerApps.csproj"
+COPY ["Sample.ContainerApps.csproj", "Sample.ContainerApps_Ingress/"]
+RUN dotnet restore "Sample.ContainerApps_Ingress/Sample.ContainerApps.csproj"
 COPY . .
 WORKDIR "/src/Sample.ContainerApps"
 RUN dotnet build "Sample.ContainerApps.csproj" -c Release -o /app/build
