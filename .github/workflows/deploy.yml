@@ -16,7 +16,7 @@ on:
 
 env:
   RESOURCE_GROUP: rg-azureday
-  REGISTRY: ${{ env.REGISTRYNAME }}
+  REGISTRY: azureday.azurecr.io
   IMAGE_NAME: ${{ github.repository }}
 
 jobs:
