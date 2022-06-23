@@ -1,4 +1,4 @@
-param nodeImage string
+param IngresContainerAppImage string
 param nodePort int
 param nodeIsExternalIngress bool
 
@@ -19,9 +19,9 @@ var location = resourceGroup().location
 var environmentName = 'env-${uniqueString(resourceGroup().id)}'
 var minReplicas = 0
 
-var nodeServiceAppName = 'node-app'
+var IngressServiceAppName = 'sample-containerapp-ingress'
 var workspaceName = 'workspace-zureday2022WfgL'
-var appInsightsName = '${nodeServiceAppName}-app-insights'
+var appInsightsName = '${IngressServiceAppName}-app-insights'
 
 var containerRegistryPasswordRef = 'container-registry-password'
 var mailgunApiKeyRef = 'mailgun-api-key'
@@ -69,7 +69,7 @@ resource environment 'Microsoft.App/managedEnvironments@2022-01-01-preview' = {
 }
 
 resource containerApp 'Microsoft.App/containerApps@2022-01-01-preview' = {
-  name: nodeServiceAppName
+  name: IngressServiceAppName
   kind: 'containerapps'
   tags: tags
   location: location
@@ -80,11 +80,7 @@ resource containerApp 'Microsoft.App/containerApps@2022-01-01-preview' = {
         {
           name: containerRegistryPasswordRef
           value: containerRegistryPassword
-        }
-        {
-          name: mailgunApiKeyRef
-          value: APPSETTINGS_API_KEY
-        }
+        }      
       ]
       registries: [
         {
@@ -101,8 +97,8 @@ resource containerApp 'Microsoft.App/containerApps@2022-01-01-preview' = {
     template: {
       containers: [
         {
-          image: nodeImage
-          name: nodeServiceAppName
+          image: IngresContainerAppImage
+          name: IngressServiceAppName
           transport: 'auto'
           env: [
             {
