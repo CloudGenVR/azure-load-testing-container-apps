@@ -1,6 +1,12 @@
-param IngresContainerAppImage string
-param nodePort int
-param nodeIsExternalIngress bool
+param ContainerAppIngressImage string
+param ContainerAppIngressPort int
+param ContainerAppIngressIsExternalIngress bool
+
+param ContainerAppBusinessPort string
+param ContainerAppBusinessIsExternalIngress bool
+param ContainerAppBusinessImage string
+
+
 
 param containerRegistry string
 param containerRegistryUsername string
@@ -9,23 +15,22 @@ param containerRegistryPassword string
 
 param tags object
 
+
 @secure()
-param APPSETTINGS_API_KEY string
-/*param APPSETTINGS_DOMAIN string
-param APPSETTINGS_FROM_EMAIL string
-param APPSETTINGS_RECIPIENT_EMAIL string */
+param APPSETTINGS_Clients_BusinessLogic string
 
 var location = resourceGroup().location
 var environmentName = 'env-${uniqueString(resourceGroup().id)}'
 var minReplicas = 0
 
-var IngressServiceAppName = 'sample-containerapp-ingress'
-var workspaceName = 'workspace-zureday2022WfgL'
-var appInsightsName = '${IngressServiceAppName}-app-insights'
+var containerAppIngressServiceAppName = 'container-app-ingress'
+var workspaceName = 'container-app-log-analytics'
+var appInsightsName = 'container-app-insights'
+
+var containerAppBusinessServiceAppName = 'container-app-business'
+
 
 var containerRegistryPasswordRef = 'container-registry-password'
-var mailgunApiKeyRef = 'mailgun-api-key'
-
 
 
 //Log analitycs workspace
@@ -68,8 +73,8 @@ resource environment 'Microsoft.App/managedEnvironments@2022-01-01-preview' = {
   }
 }
 
-resource containerApp 'Microsoft.App/containerApps@2022-01-01-preview' = {
-  name: IngressServiceAppName
+resource containerAppIngress 'Microsoft.App/containerApps@2022-01-01-preview' = {
+  name: containerAppIngressServiceAppName
   kind: 'containerapps'
   tags: tags
   location: location
@@ -90,21 +95,64 @@ resource containerApp 'Microsoft.App/containerApps@2022-01-01-preview' = {
         }
       ]
       ingress: {
-        'external': nodeIsExternalIngress
-        'targetPort': nodePort
+        'external': ContainerAppIngressIsExternalIngress
+        'targetPort': ContainerAppBusinessPort
       }
     }
     template: {
       containers: [
         {
-          image: IngresContainerAppImage
-          name: IngressServiceAppName
+          image: ContainerAppIngressImage
+          name: containerAppIngressServiceAppName
+          transport: 'auto'
+          env: [                      
+          ]
+        }
+      ]
+      scale: {
+        minReplicas: minReplicas
+      }
+    }
+  }
+}
+
+resource containerAppBusiness 'Microsoft.App/containerApps@2022-01-01-preview' = {
+  name: containerAppBusinessServiceAppName
+  kind: 'containerapps'
+  tags: tags
+  location: location
+  properties: {
+    managedEnvironmentId: environment.id
+    configuration: {
+      secrets: [
+        {
+          name: containerRegistryPasswordRef
+          value: containerRegistryPassword
+        }      
+      ]
+      registries: [
+        {
+          server: containerRegistry
+          username: containerRegistryUsername
+          passwordSecretRef: containerRegistryPasswordRef
+        }
+      ]
+      ingress: {
+        'external': ContainerAppBusinessIsExternalIngress
+        'targetPort': ContainerAppBusinessPort
+      }
+    }
+    template: {
+      containers: [
+        {
+          image: ContainerAppBusinessImage
+          name: containerAppBusinessServiceAppName
           transport: 'auto'
           env: [
-            /*{
-              name: 'APPSETTINGS_API_KEY'
-              secretref: mailgunApiKeyRef
-            } */                   
+            {
+              name: 'APPSETTINGS_Clients_BusinessLogic'
+              secretref: APPSETTINGS_Clients_BusinessLogic
+            }             
           ]
         }
       ]
