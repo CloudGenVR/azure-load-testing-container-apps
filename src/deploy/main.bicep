@@ -27,8 +27,8 @@ var workspaceName = 'container-app-log-analytics'
 var appInsightsName = 'container-app-insights'
 
 //var containerAppBusinessServiceAppName = 'container-app-business'
-var containerAppIngressServiceAppName = 'sampleingress'
-var containerAppBusinessServiceAppName = 'sampleingress'
+var containerAppIngressServiceAppName = 'containerAppIngress'
+var containerAppBusinessServiceAppName = 'containerAppBusiness'
 
 
 
