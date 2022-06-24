@@ -2,9 +2,9 @@ param ContainerAppIngressImage string
 param ContainerAppIngressPort int
 param ContainerAppIngressIsExternalIngress bool
 
-//param ContainerAppBusinessPort string
-//param ContainerAppBusinessIsExternalIngress bool
-//param ContainerAppBusinessImage string
+param ContainerAppBusinessPort string
+param ContainerAppBusinessIsExternalIngress bool
+param ContainerAppBusinessImage string
 
 
 
@@ -17,7 +17,7 @@ param tags object
 
 
 //@secure()
-//param APPSETTINGS_Clients_BusinessLogic string
+param APPSETTINGS_Clients_BusinessLogic string //"http://business-logic"
 
 var location = resourceGroup().location
 var environmentName = 'env-${uniqueString(resourceGroup().id)}'
@@ -27,7 +27,9 @@ var workspaceName = 'container-app-log-analytics'
 var appInsightsName = 'container-app-insights'
 
 //var containerAppBusinessServiceAppName = 'container-app-business'
-var containerAppIngressServiceAppName = 'samplecontainerapp-ingress'
+var containerAppIngressServiceAppName = 'sampleingress'
+var containerAppBusinessServiceAppName = 'sampleingress'
+
 
 
 var containerRegistryPasswordRef = 'container-registry-password'
@@ -104,9 +106,7 @@ resource containerAppIngress 'Microsoft.App/containerApps@2022-01-01-preview' = 
         {
           image: ContainerAppIngressImage
           name: containerAppIngressServiceAppName
-          transport: 'auto'
-          env: [                      
-          ]
+          transport: 'auto'         
         }
       ]
       scale: {
@@ -116,7 +116,7 @@ resource containerAppIngress 'Microsoft.App/containerApps@2022-01-01-preview' = 
   }
 }
 
-/*
+
 resource containerAppBusiness 'Microsoft.App/containerApps@2022-01-01-preview' = {
   name: containerAppBusinessServiceAppName
   kind: 'containerapps'

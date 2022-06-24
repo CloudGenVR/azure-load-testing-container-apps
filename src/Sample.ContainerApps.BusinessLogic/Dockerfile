@@ -6,9 +6,9 @@ EXPOSE 80
 EXPOSE 443
 
 FROM mcr.microsoft.com/dotnet/sdk:6.0 AS build
-WORKDIR /src
-COPY ["Sample.ContainerApps.BusinessLogic/Sample.ContainerApps.BusinessLogic.csproj", "Sample.ContainerApps.BusinessLogic/"]
-RUN dotnet restore "Sample.ContainerApps.BusinessLogic/Sample.ContainerApps.BusinessLogic.csproj"
+WORKDIR /src/Sample.ContainerApps.BusinessLogic
+COPY ["Sample.ContainerApps.BusinessLogic.csproj", "Sample.ContainerApps.BusinessLogic_Business/"]
+RUN dotnet restore "Sample.ContainerApps.BusinessLogic_Business/Sample.ContainerApps.BusinessLogic.csproj"
 COPY . .
 WORKDIR "/src/Sample.ContainerApps.BusinessLogic"
 RUN dotnet build "Sample.ContainerApps.BusinessLogic.csproj" -c Release -o /app/build
