@@ -25,7 +25,58 @@ jobs:
     strategy:
       matrix:
         services:
-          [{ 'imageName': 'samplecontainerappingress', 'directory': './src/Sample.ContainerApps/' },{ 'imageName': 'samplecontainerappbusiness', 'directory': './src/Sample.ContainerApps.BusinessLogic/'}]
+          [{ 'imageName': 'samplecontainerappingress', 'directory': './src/Sample.ContainerApps/'},{ 'imageName': 'samplecontainerappbusiness', 'directory': './src/Sample.ContainerApps.BusinessLogic/'}]           
+    permissions:
+      contents: read
+      packages: write
+    outputs:
+      containerImage-node: ${{ steps.image-tag.outputs.image-node-service }}
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v2
+
+      # Login against a Docker registry except on PR
+      # https://github.com/docker/login-action
+      - name: Log into registry ${{ secrets.REGISTRYNAME }}
+        if: github.event_name != 'pull_request'
+        uses: docker/login-action@v1
+        with:
+          registry: ${{ env.REGISTRY }}
+          username: ${{ secrets.REGISTRYUSER }}
+          password: ${{ secrets.REGISTRYPASSWORD }}
+
+      # Extract metadata (tags, labels) for Docker
+      # https://github.com/docker/metadata-action
+      - name: Extract Docker metadata
+        id: meta
+        uses: docker/metadata-action@v3
+        with:
+          images: ${{ env.REGISTRY }}/${{ env.IMAGE_NAME }}/${{ matrix.services.imageName }}
+          tags: |
+            type=semver,pattern={{version}}
+            type=semver,pattern={{major}}.{{minor}}
+            type=semver,pattern={{major}}
+            type=ref,event=branch
+            type=sha
+
+      # Build and push Docker image with Buildx (don't push on PR)
+      # https://github.com/docker/build-push-action
+      - name: Build and push Docker image
+        uses: docker/build-push-action@v2
+        with:
+          context: ${{ matrix.services.directory }}
+          push: ${{ github.event_name != 'pull_request' }}
+          tags: ${{ steps.meta.outputs.tags }}
+          labels: ${{ steps.meta.outputs.labels }}
+
+      - name: Output image tag
+        id: image-tag
+        run: echo "::set-output name=image-${{ matrix.services.imageName }}::${{ env.REGISTRY }}/${{ env.IMAGE_NAME }}/${{ matrix.services.imageName }}:sha-$(git rev-parse --short HEAD)" | tr '[:upper:]' '[:lower:]'
+        
+    strategy:
+      matrix:
+        services:
+          [{ 'imageName': 'samplecontainerappbusiness', 'directory': './src/Sample.ContainerApps.BusinessLogic/'}]
     permissions:
       contents: read
       packages: write
@@ -73,6 +124,8 @@ jobs:
         id: image-tag
         run: echo "::set-output name=image-${{ matrix.services.imageName }}::${{ env.REGISTRY }}/${{ env.IMAGE_NAME }}/${{ matrix.services.imageName }}:sha-$(git rev-parse --short HEAD)" | tr '[:upper:]' '[:lower:]'
  
+
+
   deploy:
     runs-on: ubuntu-latest
     needs: [build]
