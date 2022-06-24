@@ -25,7 +25,7 @@ jobs:
     strategy:
       matrix:
         services:
-          [{ 'imageName': 'samplecontainerappingress', 'directory': './src/Sample.ContainerApps/' },{ 'imageName': 'samplecontainerappingress', 'directory': './src/Sample.ContainerApps.BusinessLogic/'}]
+          [{ 'imageName': 'samplecontainerappingress', 'directory': './src/Sample.ContainerApps/' },{ 'imageName': 'samplecontainerappbusiness', 'directory': './src/Sample.ContainerApps.BusinessLogic/'}]
     permissions:
       contents: read
       packages: write
