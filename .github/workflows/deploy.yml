@@ -17,6 +17,7 @@ on:
 env:
   RESOURCE_GROUP: rg-azureday
   REGISTRY: azureday.azurecr.io
+  REGISTRY_NAME: azureday
   IMAGE_NAME: samplecontainerapp
   IMAGE_NAME_INGRESS: samplecontainerapp/containerappingress
   IMAGE_NAME_BUSINESS: samplecontainerapp/containerappbusiness
@@ -109,7 +110,7 @@ jobs:
                   appBusinessImage='${{env.IMAGE_NAME_BUSINESS}}' \
                   appBusinessPort=80 \
                   appBusinessExternalIngress=true \
-                  containerRegistry=${{ env.REGISTRY }} \
+                  containerRegistry=${{ env.REGISTRY_NAME }} \
                   containerRegistryUsername=${{ secrets.REGISTRYUSER }} \
                   containerRegistryPassword=${{ secrets.REGISTRYPASSWORD }} \      
              
