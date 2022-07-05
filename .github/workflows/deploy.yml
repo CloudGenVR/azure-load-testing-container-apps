@@ -17,7 +17,7 @@ on:
 env:
   RESOURCE_GROUP: rg-azureday
   REGISTRY: azureday.azurecr.io
-  IMAGE_NAME: samplecontainerappingress
+  IMAGE_NAME: samplecontainerapp
 
 jobs:
   build:
@@ -25,19 +25,23 @@ jobs:
     strategy:
       matrix:
         services:
-          [{ 'imageName': 'samplecontainerappingress', 'directory': './src/Sample.ContainerApps/'},{ 'imageName': 'samplecontainerappbusiness', 'directory': './src/Sample.ContainerApps.BusinessLogic/'}]           
+          [
+            { 'imageName': 'samplecontainerappingress', 'directory': './src/Sample.ContainerApps/'},
+            { 'imageName': 'samplecontainerappbusiness', 'directory': './src/Sample.ContainerApps.BusinessLogic/'}
+          ]           
     permissions:
       contents: read
       packages: write
     outputs:
-      containerImage-node: ${{ steps.image-tag.outputs.image-node-service }}
+      containerImage-ingress: ${{ steps.image-tag.outputs.image-samplecontainerappingress }}
+      containerImage-business: ${{ steps.image-tag.outputs.image-samplecontainerappbusiness }}
     steps:
       - name: Checkout repository
         uses: actions/checkout@v2
 
       # Login against a Docker registry except on PR
       # https://github.com/docker/login-action
-      - name: Log into registry ${{ secrets.REGISTRYNAME }}
+      - name: Log into registry ${{ env.REGISTRY }}
         if: github.event_name != 'pull_request'
         uses: docker/login-action@v1
         with:
@@ -72,8 +76,6 @@ jobs:
       - name: Output image tag
         id: image-tag
         run: echo "::set-output name=image-${{ matrix.services.imageName }}::${{ env.REGISTRY }}/${{ env.IMAGE_NAME }}/${{ matrix.services.imageName }}:sha-$(git rev-parse --short HEAD)" | tr '[:upper:]' '[:lower:]'
-        
-    
 
   deploy:
     runs-on: ubuntu-latest
@@ -93,18 +95,19 @@ jobs:
         if: github.event_name != 'pull_request'
         with:
           inlineScript: |
-            tags='{"owner":"Cloudgen Verona", "email":"associazione@cloudgen.it"}'
-            az deployment group create \
-              --resource-group ${{ env.RESOURCE_GROUP }} \
-              --template-file src/deploy/main.bicep \
-              --parameters \
-                  ContainerAppIngressImage='${{ needs.build.outputs.containerImage-node }}' \
-                  ContainerAppIngressPort=80 \
-                  ContainerAppIngressIsExternalIngress=true \
+            az group create -g ${{ secrets.RESOURCE_GROUP }} -l westeurope
+            az deployment group create -g ${{ secrets.RESOURCE_GROUP }} -f src/deploy/main.bicep \
+              -p \
+                  minReplicas = 0 \
+                  appingressImage='${{ needs.build.outputs.containerImage-ingress }}' \
+                  appIngressPort=80 \
+                  appIngressisExternalIngress=true \
+                  appBusinessImage='${{ needs.build.outputs.containerImage-business }}' \
+                  appBusinessPort=80 \
+                  appBusinessExternalIngress=true \
                   containerRegistry=${{ env.REGISTRY }} \
                   containerRegistryUsername=${{ secrets.REGISTRYUSER }} \
-                  containerRegistryPassword=${{ secrets.REGISTRYPASSWORD }} \
-                  tags="$tags" \              
+                  containerRegistryPassword=${{ secrets.REGISTRYPASSWORD }} \          
              
 
       - name: What-if bicep
@@ -112,16 +115,17 @@ jobs:
         if: github.event_name == 'pull_request'
         with:
           inlineScript: |
-            tags='{"owner":"Cloudgen Verona", "email":"associazione@cloudgen.it"}'
             az deployment group what-if \
-              --resource-group ${{ env.RESOURCE_GROUP }} \
-              --template-file src/deploy/main.bicep \
-              --parameters \
-                  ContainerAppIngressImage='${{ needs.build.outputs.containerImage-node }}' \
-                  ContainerAppIngressPort=80 \
-                  ContainerAppIngressIsExternalIngress=true \
+             -g ${{ secrets.RESOURCE_GROUP }} -f src/deploy/main.bicep \
+              -p \
+                  minReplicas = 0 \
+                  appingressImage='${{ needs.build.outputs.containerImage-ingress }}' \
+                  appIngressPort=80 \
+                  appIngressisExternalIngress=true \
+                  appBusinessImage='${{ needs.build.outputs.containerImage-business }}' \
+                  appBusinessPort=80 \
+                  appBusinessExternalIngress=true \
                   containerRegistry=${{ env.REGISTRY }} \
-                  containerRegistryUsername=${{ env.REGISTRYUSER }} \
-                  containerRegistryPassword=${{ env.REGISTRYPASSWORD }} \
-                  tags="$tags" \
+                  containerRegistryUsername=${{ secrets.REGISTRYUSER }} \
+                  containerRegistryPassword=${{ secrets.REGISTRYPASSWORD }} \          
                   
