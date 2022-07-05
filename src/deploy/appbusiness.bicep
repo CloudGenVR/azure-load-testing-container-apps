@@ -49,13 +49,7 @@ resource containerAppBusiness 'Microsoft.App/containerApps@2022-01-01-preview' =
           image: containerImage
           name: containerAppName
           env: env
-          environmentVariables: [
-            {
-            name: 'Clients__BusinessLogic'
-            secureValue: null
-            value: 'http://business-logic'
-            }
-        ]
+         
         }
       ]
       scale: {

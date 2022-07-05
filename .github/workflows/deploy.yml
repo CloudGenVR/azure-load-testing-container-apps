@@ -95,7 +95,7 @@ jobs:
         if: github.event_name != 'pull_request'
         with:
           inlineScript: |
-            az deployment group create -g Azureday2022 -f src/deploy/main.bicep \
+            az deployment group create -g ${{ secrets.RESOURCE_GROUP }} -f src/deploy/main.bicep \
               -p \
                   minReplicas = 0 \
                   appingressImage='samplecontainerapp/samplecontainerappingress:main' \
@@ -117,7 +117,7 @@ jobs:
             az deployment group what-if \
              -g ${{ secrets.RESOURCE_GROUP }} -f src/deploy/main.bicep \
               -p \
-                 minReplicas = 0 \
+                  minReplicas = 0 \
                   appingressImage='samplecontainerapp/samplecontainerappingress:main' \
                   appIngressPort=80 \
                   appIngressisExternalIngress=true \
