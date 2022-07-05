@@ -57,10 +57,10 @@ jobs:
         run: |
           
           docker build ./src/Sample.ContainerApps/ -t ${{ env.REGISTRY_NAME }}.azurecr.io/${{ env.REPOSITORY_NAME }}/${{ env.IMAGE_NAME_INGRESS }}:v1
-          docker push ${{ env.REGISTRY_NAME }}.azurecr.io/${{ env.REPOSITORYNAME }}/${{ env.IMAGE_NAME_INGRESS }}:v1
+          docker push ${{ env.REGISTRY_NAME }}.azurecr.io/${{ env.REPOSITORY_NAME }}/${{ env.IMAGE_NAME_INGRESS }}:v1
           
           docker build ./src/Sample.ContainerApps.BusinessLogic/ -t ${{ env.REGISTRY_NAME }}.azurecr.io/${{ env.REPOSITORY_NAME }}/${{ env.IMAGE_NAME_BUSINESS }}:v1
-          docker push ${{ env.REGISTRY_NAME }}.azurecr.io${{ env.REPOSITORYNAME }}/${{ env.IMAGE_NAME_BUSINESS }}:v1
+          docker push ${{ env.REGISTRY_NAME }}.azurecr.io/${{ env.REPOSITORY_NAME }}/${{ env.IMAGE_NAME_BUSINESS }}:v1
 
  
   deploy:
@@ -85,10 +85,10 @@ jobs:
               --resource-group ${{ env.RESOURCE_GROUP }} \
               --template-file src/deploy/main.bicep \
               --parameters \
-                  appingressImage='${{ env.REGISTRY_NAME }}.azurecr.io/${{ env.REPOSITORYNAME }}/${{ env.IMAGE_NAME_INGRESS }}:v1' \
+                  appingressImage='${{ env.REGISTRY_NAME }}.azurecr.io/${{ env.REPOSITORY_NAME }}/${{ env.IMAGE_NAME_INGRESS }}:v1' \
                   appIngressPort=80 \
                   appIngressisExternalIngress=true \
-                  appBusinessImage='${{needs.build.outputs.containerImage-business}}' \
+                  appBusinessImage='${{ env.REGISTRY_NAME }}.azurecr.io/${{ env.REPOSITORY_NAME }}/${{ env.IMAGE_NAME_BUSINESS }}:v1' \
                   appBusinessPort=80 \
                   appBusinessExternalIngress=true \
                   containerRegistry=${{ env.REGISTRY_NAME }} \
