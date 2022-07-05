@@ -95,7 +95,6 @@ jobs:
         if: github.event_name != 'pull_request'
         with:
           inlineScript: |
-            az group create -g ${{ secrets.RESOURCE_GROUP }} -l westeurope
             az deployment group create -g ${{ secrets.RESOURCE_GROUP }} -f src/deploy/main.bicep \
               -p \
                   minReplicas = 0 \
