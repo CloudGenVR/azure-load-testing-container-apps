@@ -98,10 +98,10 @@ jobs:
             az deployment group create -g ${{ secrets.RESOURCE_GROUP }} -f src/deploy/main.bicep \
               -p \
                   minReplicas = 0 \
-                  appingressImage='${{ steps.image-tag.outputs.image-samplecontainerappingress }}' \
+                  appingressImage='azuredaycr.azurecr.io/samplecontainerapp/samplecontainerappingress:main' \
                   appIngressPort=80 \
                   appIngressisExternalIngress=true \
-                  appBusinessImage='${{ steps.image-tag.outputs.image-samplecontainerappbusiness }}' \
+                  appBusinessImage='azuredaycr.azurecr.io/samplecontainerapp/samplecontainerappbusiness:main' \
                   appBusinessPort=80 \
                   appBusinessExternalIngress=true \
                   containerRegistry=${{ env.REGISTRY }} \
@@ -118,10 +118,10 @@ jobs:
              -g ${{ secrets.RESOURCE_GROUP }} -f src/deploy/main.bicep \
               -p \
                   minReplicas = 0 \
-                  appingressImage='${{ steps.image-tag.outputs.image-samplecontainerappingress }}' \
+                  appingressImage='azuredaycr.azurecr.io/samplecontainerapp/samplecontainerappingress:main' \
                   appIngressPort=80 \
                   appIngressisExternalIngress=true \
-                  appBusinessImage='${{ steps.image-tag.outputs.image-samplecontainerappbusiness }}' \
+                  appBusinessImage='azuredaycr.azurecr.io/samplecontainerapp/samplecontainerappbusiness:main' \
                   appBusinessPort=80 \
                   appBusinessExternalIngress=true \
                   containerRegistry=${{ env.REGISTRY }} \
