@@ -19,7 +19,6 @@ param appBusinessImage string
 param appBusinessPort int
 param appBusinessExternalIngress bool = true
 var appBusinessServiceName = 'appbusiness-app'
-param minReplicas int
 //@secure()
 //param APPSETTINGS_Clients_BusinessLogic string //"http://business-logic"
 
@@ -39,7 +38,7 @@ module appingress 'appingress.bicep' = {
     environment
   ]
   params: {
-    minReplicas: minReplicas 
+    minReplicas: 0 
     containerAppName: appIngressServiceName
     containerImage: appingressImage
     containerPort: appIngressPort
@@ -66,7 +65,7 @@ module appbusiness 'appbusiness.bicep' = {
     environment
   ]
   params: {
-    minReplicas: minReplicas 
+    minReplicas: 0 
     containerAppName: appBusinessServiceName
     containerImage: appBusinessImage
     containerPort: appBusinessPort
