@@ -18,9 +18,6 @@ env:
   RESOURCE_GROUP: rg-azureday
   REGISTRY: azureday.azurecr.io
   IMAGE_NAME: samplecontainerapp
-  IMAGE_NAME_BUSINESS: samplecontainerapp/samplecontainerappbusiness
-  IMAGE_NAME_INGRESS: samplecontainerapp/samplecontainerappbusiness
-
 
 jobs:
   build:
@@ -29,15 +26,15 @@ jobs:
       matrix:
         services:
           [
-            { 'imageName': '{{env.IMAGE_NAME}}', 'directory': './src/Sample.ContainerApps/'},
-            { 'imageName': '{{env.IMAGE_NAME}}', 'directory': './src/Sample.ContainerApps.BusinessLogic/'}
+            { 'imageName': 'containerappingress', 'directory': './src/Sample.ContainerApps/'},
+            { 'imageName': 'containerappbusiness', 'directory': './src/Sample.ContainerApps.BusinessLogic/'}
           ]           
     permissions:
       contents: read
       packages: write
     outputs:
-      containerImage-ingress: ${{ steps.image-tag.outputs.image-samplecontainerappingress }}
-      containerImage-business: ${{ steps.image-tag.outputs.image-samplecontainerappbusiness }}
+      containerImage-ingress: ${{ steps.image-tag.outputs.image-containerappingress }}
+      containerImage-business: ${{ steps.image-tag.outputs.image-containerappbusiness }}
     steps:
       - name: Checkout repository
         uses: actions/checkout@v2
@@ -79,6 +76,8 @@ jobs:
       - name: Output image tag
         id: image-tag
         run: echo "::set-output name=image-${{ matrix.services.imageName }}::${{ env.REGISTRY }}/${{ env.IMAGE_NAME }}/${{ matrix.services.imageName }}:sha-$(git rev-parse --short HEAD)" | tr '[:upper:]' '[:lower:]'
+        
+    
 
   deploy:
     runs-on: ubuntu-latest
@@ -98,34 +97,17 @@ jobs:
         if: github.event_name != 'pull_request'
         with:
           inlineScript: |
-            az deployment group create -g ${{ env.RESOURCE_GROUP }} -f src/deploy/main.bicep \
-              -p \
-                  appingressImage='{{env.IMAGE_NAME_INGRESS}}' \
+            az deployment group create \
+              --resource-group ${{ env.RESOURCE_GROUP }} \
+              --template-file src/deploy/main.bicep \
+              --parameters \
+                  appingressImage='${{env.IMAGE_NAME_INGRESS}}' \
                   appIngressPort=80 \
                   appIngressisExternalIngress=true \
-                  appBusinessImage='{{env.IMAGE_NAME_BUSINESS}}' \
+                  appBusinessImage='${{env.IMAGE_NAME_BUSINESS}}' \
                   appBusinessPort=80 \
                   appBusinessExternalIngress=true \
                   containerRegistry=${{ env.REGISTRY }} \
                   containerRegistryUsername=${{ secrets.REGISTRYUSER }} \
-                  containerRegistryPassword=${{ secrets.REGISTRYPASSWORD }} \          
+                  containerRegistryPassword=${{ secrets.REGISTRYPASSWORD }} \      
              
-
-      - name: What-if bicep
-        uses: azure/CLI@v1
-        if: github.event_name == 'pull_request'
-        with:
-          inlineScript: |
-            az deployment group what-if \
-             -g ${{ env.RESOURCE_GROUP }} -f src/deploy/main.bicep \
-              -p \
-                  appingressImage='samplecontainerapp/samplecontainerappingress:main' \
-                  appIngressPort=80 \
-                  appIngressisExternalIngress=true \
-                  appBusinessImage='samplecontainerapp/samplecontainerappbusiness:main' \
-                  appBusinessPort=80 \
-                  appBusinessExternalIngress=true \
-                  containerRegistry=${{ env.REGISTRY }} \
-                  containerRegistryUsername=${{ secrets.REGISTRYUSER }} \
-                  containerRegistryPassword=${{ secrets.REGISTRYPASSWORD }} \                  
-                  
