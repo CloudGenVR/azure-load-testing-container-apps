@@ -18,8 +18,8 @@ env:
   RESOURCE_GROUP: rg-azureday
   REGISTRY: azureday.azurecr.io
   IMAGE_NAME: samplecontainerapp
-  IMAGE_NAME_INGRESS: samplecontainerapp/containerappingress:main
-  IMAGE_NAME_BUSINESS: samplecontainerapp/containerappbusiness:main
+  IMAGE_NAME_INGRESS: samplecontainerapp/containerappingress
+  IMAGE_NAME_BUSINESS: samplecontainerapp/containerappbusiness
 
 jobs:
   build:
