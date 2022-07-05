@@ -15,9 +15,10 @@ on:
 
 
 env:
-  RESOURCE_GROUP: Azureday2022
-  REGISTRY: azuredaycr.azurecr.io
-  IMAGE_NAME: samplecontainerapp
+  RESOURCE_GROUP: rg-azureday
+  REGISTRY: azureday.azurecr.io
+  IMAGE_NAME_BUSINESS: samplecontainerapp/samplecontainerappbusiness
+  IMAGE_NAME_INGRESS: samplecontainerapp/samplecontainerappbusiness
 
 
 jobs:
@@ -27,8 +28,8 @@ jobs:
       matrix:
         services:
           [
-            { 'imageName': 'samplecontainerappingress', 'directory': './src/Sample.ContainerApps/'},
-            { 'imageName': 'samplecontainerappbusiness', 'directory': './src/Sample.ContainerApps.BusinessLogic/'}
+            { 'imageName': '{{env.IMAGE_NAME_INGRESS}}', 'directory': './src/Sample.ContainerApps/'},
+            { 'imageName': '{{env.IMAGE_NAME_BUSINESS}}', 'directory': './src/Sample.ContainerApps.BusinessLogic/'}
           ]           
     permissions:
       contents: read
@@ -98,10 +99,10 @@ jobs:
           inlineScript: |
             az deployment group create -g ${{ env.RESOURCE_GROUP }} -f src/deploy/main.bicep \
               -p \
-                  appingressImage='samplecontainerapp/samplecontainerappingress:main' \
+                  appingressImage='{{env.IMAGE_NAME_INGRESS}}' \
                   appIngressPort=80 \
                   appIngressisExternalIngress=true \
-                  appBusinessImage='samplecontainerapp/samplecontainerappbusiness:main' \
+                  appBusinessImage='{{env.IMAGE_NAME_BUSINESS}}' \
                   appBusinessPort=80 \
                   appBusinessExternalIngress=true \
                   containerRegistry=${{ env.REGISTRY }} \
