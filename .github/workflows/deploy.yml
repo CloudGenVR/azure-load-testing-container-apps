@@ -19,6 +19,7 @@ env:
   REGISTRY: azuredaycr.azurecr.io
   IMAGE_NAME: samplecontainerapp
 
+
 jobs:
   build:
     runs-on: ubuntu-latest
@@ -95,7 +96,7 @@ jobs:
         if: github.event_name != 'pull_request'
         with:
           inlineScript: |
-            az deployment group create -g ${{ secrets.RESOURCE_GROUP }} -f src/deploy/main.bicep \
+            az deployment group create -g ${{ env.RESOURCE_GROUP }} -f src/deploy/main.bicep \
               -p \
                   minReplicas = 0 \
                   appingressImage='samplecontainerapp/samplecontainerappingress:main' \
@@ -115,7 +116,7 @@ jobs:
         with:
           inlineScript: |
             az deployment group what-if \
-             -g ${{ secrets.RESOURCE_GROUP }} -f src/deploy/main.bicep \
+             -g ${{ env.RESOURCE_GROUP }} -f src/deploy/main.bicep \
               -p \
                   minReplicas = 0 \
                   appingressImage='samplecontainerapp/samplecontainerappingress:main' \
