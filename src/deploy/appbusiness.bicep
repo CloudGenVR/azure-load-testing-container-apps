@@ -9,7 +9,7 @@ param containerRegistryUsername string
 param isPrivateRegistry bool
 param enableIngress bool 
 param registryPassword string
-param minReplicas int = 0
+param minReplicas int 
 param secrets array = []
 param env array = []
 
