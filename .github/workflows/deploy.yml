@@ -82,9 +82,9 @@ jobs:
         with:
           inlineScript: |
             az deployment group create \
-              --resource-group ${{ env.RESOURCE_GROUP }} \
-              --template-file src/deploy/main.bicep \
-              --parameters \
+              -g ${{ env.RESOURCE_GROUP }} \
+              -f src/deploy/main.bicep \
+              -p \
                   appingressImage='${{ env.IMAGE_NAME_INGRESS }}' \
                   appIngressPort=80 \
                   appIngressisExternalIngress=true \
