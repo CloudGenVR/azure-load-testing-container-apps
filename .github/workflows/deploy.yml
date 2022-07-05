@@ -98,10 +98,10 @@ jobs:
             az deployment group create -g ${{ secrets.RESOURCE_GROUP }} -f src/deploy/main.bicep \
               -p \
                   minReplicas = 0 \
-                  appingressImage='${{ needs.build.outputs.containerImage-ingress }}' \
+                  appingressImage='${{ steps.image-tag.outputs.image-samplecontainerappingress }}' \
                   appIngressPort=80 \
                   appIngressisExternalIngress=true \
-                  appBusinessImage='${{ needs.build.outputs.containerImage-business }}' \
+                  appBusinessImage='${{ steps.image-tag.outputs.image-samplecontainerappbusiness }}' \
                   appBusinessPort=80 \
                   appBusinessExternalIngress=true \
                   containerRegistry=${{ env.REGISTRY }} \
@@ -118,13 +118,13 @@ jobs:
              -g ${{ secrets.RESOURCE_GROUP }} -f src/deploy/main.bicep \
               -p \
                   minReplicas = 0 \
-                  appingressImage='${{ needs.build.outputs.containerImage-ingress }}' \
+                  appingressImage='${{ steps.image-tag.outputs.image-samplecontainerappingress }}' \
                   appIngressPort=80 \
                   appIngressisExternalIngress=true \
-                  appBusinessImage='${{ needs.build.outputs.containerImage-business }}' \
+                  appBusinessImage='${{ steps.image-tag.outputs.image-samplecontainerappbusiness }}' \
                   appBusinessPort=80 \
                   appBusinessExternalIngress=true \
                   containerRegistry=${{ env.REGISTRY }} \
                   containerRegistryUsername=${{ secrets.REGISTRYUSER }} \
-                  containerRegistryPassword=${{ secrets.REGISTRYPASSWORD }} \          
+                  containerRegistryPassword=${{ secrets.REGISTRYPASSWORD }} \                  
                   

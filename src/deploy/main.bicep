@@ -9,12 +9,14 @@ param registryPassword string = 'registry-password'
 
 //ingress app
 param appingressImage string
-param appIngressPort int = 5000
+param appIngressPort int
+param appIngressisExternalIngress bool = true
 var appIngressServiceName = 'appingress-app'
 
 //business app
 param appBusinessImage string
-param appBusinessPort int = 5000
+param appBusinessPort int
+param appBusinessExternalIngress bool = true
 var appBusinessServiceName = 'appbusiness-app'
 
 
@@ -44,7 +46,7 @@ module appingress 'appingress.bicep' = {
     containerRegistryUsername: containerRegistryUsername
     enableIngress: true
     environmentName: environmentName
-    isExternalIngress: false
+    isExternalIngress: appIngressisExternalIngress
     isPrivateRegistry: isPrivateRegistry
     location: location
     registryPassword: registryPassword
@@ -70,7 +72,7 @@ module appbusiness 'appbusiness.bicep' = {
     containerRegistryUsername: containerRegistryUsername
     enableIngress: true
     environmentName: environmentName
-    isExternalIngress: false
+    isExternalIngress: appBusinessExternalIngress
     isPrivateRegistry: isPrivateRegistry
     location: location
     registryPassword: registryPassword
