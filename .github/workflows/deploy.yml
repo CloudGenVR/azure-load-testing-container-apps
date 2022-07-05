@@ -55,7 +55,7 @@ jobs:
       #build and push image to acr
       - name: Build and push Docker image
         run: |
-          az acr login --name "${{ env.REGISTRY }}"
+          
           docker build ./src/Sample.ContainerApps/ -t ${{ env.REGISTRY }}.azurecr.io/${{ env.REPOSITORYNAME }}/${{ env.IMAGE_NAME_INGRESS }}:v1
           docker push ${{ env.REGISTRY }}.azurecr.io/${{ env.REPOSITORYNAME }}/${{ env.IMAGE_NAME_INGRESS }}:v1
           
@@ -88,7 +88,7 @@ jobs:
                   appingressImage='${{ env.REGISTRY }}.azurecr.io/${{ env.REPOSITORYNAME }}/${{ env.IMAGE_NAME_INGRESS }}:v1' \
                   appIngressPort=80 \
                   appIngressisExternalIngress=true \
-                  appBusinessImage='${{ env.REGISTRY }}.azurecr.io/${{ env.REPOSITORYNAME }}/${{ env.IMAGE_NAME_BUSINESS }}:v1' \
+                  appBusinessImage='${{needs.build.outputs.containerImage-business}}' \
                   appBusinessPort=80 \
                   appBusinessExternalIngress=true \
                   containerRegistry=${{ env.REGISTRY_NAME }} \
