@@ -17,6 +17,7 @@ on:
 env:
   RESOURCE_GROUP: rg-azureday
   REGISTRY: azureday.azurecr.io
+  IMAGE_NAME: samplecontainerapp
   IMAGE_NAME_BUSINESS: samplecontainerapp/samplecontainerappbusiness
   IMAGE_NAME_INGRESS: samplecontainerapp/samplecontainerappbusiness
 
@@ -28,8 +29,8 @@ jobs:
       matrix:
         services:
           [
-            { 'imageName': '{{env.IMAGE_NAME_INGRESS}}', 'directory': './src/Sample.ContainerApps/'},
-            { 'imageName': '{{env.IMAGE_NAME_BUSINESS}}', 'directory': './src/Sample.ContainerApps.BusinessLogic/'}
+            { 'imageName': '{{env.IMAGE_NAME}}', 'directory': './src/Sample.ContainerApps/'},
+            { 'imageName': '{{env.IMAGE_NAME}}', 'directory': './src/Sample.ContainerApps.BusinessLogic/'}
           ]           
     permissions:
       contents: read
