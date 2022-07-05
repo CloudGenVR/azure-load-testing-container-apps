@@ -18,9 +18,9 @@ env:
   RESOURCE_GROUP: rg-azureday
   REGISTRY: azureday.azurecr.io
   REGISTRY_NAME: azureday
-  IMAGE_NAME: samplecontainerapp
-  IMAGE_NAME_INGRESS: samplecontainerapp/containerappingress
-  IMAGE_NAME_BUSINESS: samplecontainerapp/containerappbusiness
+  REPOSITORY_NAME: samplecontainerapp
+  IMAGE_NAME_INGRESS: containerappingress
+  IMAGE_NAME_BUSINESS: containerappbusiness
 
 jobs:
   build:
@@ -50,38 +50,19 @@ jobs:
         with:
           registry: ${{ env.REGISTRY }}
           username: ${{ secrets.REGISTRYUSER }}
-          password: ${{ secrets.REGISTRYPASSWORD }}
+          password: ${{ secrets.REGISTRYPASSWORD }}   
 
-      # Extract metadata (tags, labels) for Docker
-      # https://github.com/docker/metadata-action
-      - name: Extract Docker metadata
-        id: meta
-        uses: docker/metadata-action@v3
-        with:
-          images: ${{ env.REGISTRY }}/${{ env.IMAGE_NAME }}/${{ matrix.services.imageName }}
-          tags: |
-            type=semver,pattern={{version}}
-            type=semver,pattern={{major}}.{{minor}}
-            type=semver,pattern={{major}}
-            type=ref,event=branch
-            type=sha
-
-      # Build and push Docker image with Buildx (don't push on PR)
-      # https://github.com/docker/build-push-action
+      #build and push image to acr
       - name: Build and push Docker image
-        uses: docker/build-push-action@v2
-        with:
-          context: ${{ matrix.services.directory }}
-          push: ${{ github.event_name != 'pull_request' }}
-          tags: ${{ steps.meta.outputs.tags }}
-          labels: ${{ steps.meta.outputs.labels }}
+        run: |
+          az acr login --name "${{ env.REGISTRY }}"
+          docker build ./src/Sample.ContainerApps/ -t ${{ env.REGISTRY }}.azurecr.io/${{ env.REPOSITORYNAME }}/${{ env.IMAGE_NAME_INGRESS }}:v1
+          docker push ${{ env.REGISTRY }}.azurecr.io/${{ env.REPOSITORYNAME }}/${{ env.IMAGE_NAME_INGRESS }}:v1
+          
+          docker build ./src/Sample.ContainerApps.BusinessLogic/ -t ${{ env.REGISTRY }}.azurecr.io/${{ env.REPOSITORYNAME }}/${{ env.IMAGE_NAME_BUSINESS }}:v1
+          docker push ${{ env.REGISTRY }}.azurecr.io${{ env.REPOSITORYNAME }}/${{ env.IMAGE_NAME_BUSINESS }}:v1
 
-      - name: Output image tag
-        id: image-tag
-        run: echo "::set-output name=image-${{ matrix.services.imageName }}::${{ env.REGISTRY }}/${{ env.IMAGE_NAME }}/${{ matrix.services.imageName }}:sha-$(git rev-parse --short HEAD)" | tr '[:upper:]' '[:lower:]'
-        
-    
-
+ 
   deploy:
     runs-on: ubuntu-latest
     needs: [build]
@@ -104,10 +85,10 @@ jobs:
               --resource-group ${{ env.RESOURCE_GROUP }} \
               --template-file src/deploy/main.bicep \
               --parameters \
-                  appingressImage='${{needs.build.outputs.containerImage-ingress}}' \
+                  appingressImage='${{ env.REGISTRY }}.azurecr.io/${{ env.REPOSITORYNAME }}/${{ env.IMAGE_NAME_INGRESS }}:v1' \
                   appIngressPort=80 \
                   appIngressisExternalIngress=true \
-                  appBusinessImage='${{needs.build.outputs.containerImage-business}}' \
+                  appBusinessImage='${{ env.REGISTRY }}.azurecr.io/${{ env.REPOSITORYNAME }}/${{ env.IMAGE_NAME_BUSINESS }}:v1' \
                   appBusinessPort=80 \
                   appBusinessExternalIngress=true \
                   containerRegistry=${{ env.REGISTRY_NAME }} \
