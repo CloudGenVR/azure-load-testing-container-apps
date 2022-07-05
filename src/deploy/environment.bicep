@@ -4,18 +4,6 @@ param appInsightsName string
 param location string
 
 
-//Log analitycs workspace
-resource workspace 'Microsoft.OperationalInsights/workspaces@2020-03-01-preview' = {
-  name: logAnalyticsWorkspaceName
-  location: location
-  properties: {
-    sku: {
-      name: 'PerGB2018'
-    }
-    retentionInDays: 30
-    workspaceCapping: {}
-  }
-}
 
 
 // application insight
@@ -43,6 +31,19 @@ resource environment 'Microsoft.App/managedEnvironments@2022-01-01-preview' = {
         sharedKey: listKeys(workspace.id, workspace.apiVersion).primarySharedKey
       }
     }
+  }
+}
+
+//Log analitycs workspace
+resource workspace 'Microsoft.OperationalInsights/workspaces@2020-03-01-preview' = {
+  name: logAnalyticsWorkspaceName
+  location: location
+  properties: {
+    sku: {
+      name: 'PerGB2018'
+    }
+    retentionInDays: 30
+    workspaceCapping: {}
   }
 }
 
