@@ -95,13 +95,13 @@ jobs:
         if: github.event_name != 'pull_request'
         with:
           inlineScript: |
-            az deployment group create -g ${{ secrets.RESOURCE_GROUP }} -f src/deploy/main.bicep \
+            az deployment group create -g Azureday2022 -f src/deploy/main.bicep \
               -p \
                   minReplicas = 0 \
-                  appingressImage='azuredaycr.azurecr.io/samplecontainerapp/samplecontainerappingress:main' \
+                  appingressImage='samplecontainerapp/samplecontainerappingress:main' \
                   appIngressPort=80 \
                   appIngressisExternalIngress=true \
-                  appBusinessImage='azuredaycr.azurecr.io/samplecontainerapp/samplecontainerappbusiness:main' \
+                  appBusinessImage='samplecontainerapp/samplecontainerappbusiness:main' \
                   appBusinessPort=80 \
                   appBusinessExternalIngress=true \
                   containerRegistry=${{ env.REGISTRY }} \
@@ -117,11 +117,11 @@ jobs:
             az deployment group what-if \
              -g ${{ secrets.RESOURCE_GROUP }} -f src/deploy/main.bicep \
               -p \
-                  minReplicas = 0 \
-                  appingressImage='azuredaycr.azurecr.io/samplecontainerapp/samplecontainerappingress:main' \
+                 minReplicas = 0 \
+                  appingressImage='samplecontainerapp/samplecontainerappingress:main' \
                   appIngressPort=80 \
                   appIngressisExternalIngress=true \
-                  appBusinessImage='azuredaycr.azurecr.io/samplecontainerapp/samplecontainerappbusiness:main' \
+                  appBusinessImage='samplecontainerapp/samplecontainerappbusiness:main' \
                   appBusinessPort=80 \
                   appBusinessExternalIngress=true \
                   containerRegistry=${{ env.REGISTRY }} \
