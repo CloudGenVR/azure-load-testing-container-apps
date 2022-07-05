@@ -1,10 +1,10 @@
 param containerAppName string
 param location string
 param environmentName string 
-param containerImage string
+param containerImage string = 'azureday.azurecr.io/samplecontainerapp/containerappbusiness:v1'
 param containerPort int
 param isExternalIngress bool
-param containerRegistry string
+param containerRegistry string = 'azureday.azurecr.io'
 param containerRegistryUsername string
 param isPrivateRegistry bool
 param enableIngress bool 
