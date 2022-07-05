@@ -8,14 +8,14 @@ param containerRegistryPassword string = ''
 param registryPassword string = 'registry-password'
 
 //ingress app
-param appingressImage string
+param appingressImage string = 'azureday.azurecr.io/samplecontainerapp/containerappingress:v1'
 param appIngressPort int
 param appIngressisExternalIngress bool = true
 var appIngressServiceName = 'appingress-app'
 
 
 //business app
-param appBusinessImage string
+param appBusinessImage string = 'azureday.azurecr.io/samplecontainerapp/containerappbusiness:v1'
 param appBusinessPort int
 param appBusinessExternalIngress bool = true
 var appBusinessServiceName = 'appbusiness-app'
