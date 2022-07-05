@@ -85,10 +85,10 @@ jobs:
               --resource-group ${{ env.RESOURCE_GROUP }} \
               --template-file src/deploy/main.bicep \
               --parameters \
-                  appingressImage='${{ env.IMAGE_NAME_INGRESS }}:v1' \
+                  appingressImage='${{ env.IMAGE_NAME_INGRESS }}' \
                   appIngressPort=80 \
                   appIngressisExternalIngress=true \
-                  appBusinessImage='${{ env.IMAGE_NAME_BUSINESS }}:v1' \
+                  appBusinessImage='${{ env.IMAGE_NAME_BUSINESS }}' \
                   appBusinessPort=80 \
                   appBusinessExternalIngress=true \
                   containerRegistry=${{ env.REGISTRY_NAME }} \
