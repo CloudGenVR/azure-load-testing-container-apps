@@ -15,8 +15,8 @@ on:
 
 
 env:
-  RESOURCE_GROUP: rg-azureday
-  REGISTRY: azureday.azurecr.io
+  RESOURCE_GROUP: Azureday2022
+  REGISTRY: azuredaycr.azurecr.io
   IMAGE_NAME: samplecontainerapp
 
 jobs:
