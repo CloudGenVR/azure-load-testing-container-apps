@@ -97,7 +97,8 @@ jobs:
                   containerRegistryUsername=${{ secrets.REGISTRYUSER }} \
                   containerRegistryPassword=${{ secrets.REGISTRYPASSWORD }} \   
 
-                  
+                   
+                   
       # https://github.com/Azure/load-testing
       - name: 'Create Azure Load Test'
         uses: azure/load-testing@v1
