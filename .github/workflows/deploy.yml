@@ -85,10 +85,10 @@ jobs:
               -g ${{ env.RESOURCE_GROUP }} \
               -f src/deploy/main.bicep \
               -p \
-                  appIngressImage=${{ env.REGISTRY_NAME }}.azurecr.io/${{ env.REPOSITORY_NAME }}/${{ env.IMAGE_NAME_INGRESS }}:v1 \
+                  appIngressImage='${{ env.REGISTRY_NAME }}.azurecr.io/${{ env.REPOSITORY_NAME }}/${{ env.IMAGE_NAME_INGRESS }}:v1' \
                   appIngressPort=80 \
                   appIngressisExternalIngress=true \
-                  appBusinessImage=${{ env.REGISTRY_NAME }}.azurecr.io/${{ env.REPOSITORY_NAME }}/${{ env.IMAGE_NAME_BUSINESS }}:v1 \
+                  appBusinessImage='${{ env.REGISTRY_NAME }}.azurecr.io/${{ env.REPOSITORY_NAME }}/${{ env.IMAGE_NAME_BUSINESS }}:v1' \
                   appBusinessPort=80 \
                   appBusinessExternalIngress=true \
                   containerRegistry=${{ env.REGISTRY_NAME }} \
