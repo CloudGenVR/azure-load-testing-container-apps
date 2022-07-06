@@ -85,10 +85,10 @@ jobs:
               -g ${{ env.RESOURCE_GROUP }} \
               -f src/deploy/main.bicep \
               -p \
-                  appIngressImage='azureday.azurecr.io/samplecontainerapp/containerappingress:v1' \
+                  appIngressImage=${{ secrets.APPINGRESSIMAGE }} \
                   appIngressPort=80 \
                   appIngressisExternalIngress=true \
-                  appBusinessImage='azureday.azurecr.io/samplecontainerapp/containerappbusiness:v1' \
+                  appBusinessImage=${{ secrets.APPBUSINESSIMAGE }} \
                   appBusinessPort=80 \
                   appBusinessExternalIngress=true \
                   containerRegistry=${{ env.REGISTRY_NAME }} \
