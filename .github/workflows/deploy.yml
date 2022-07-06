@@ -78,7 +78,7 @@ jobs:
         with:
           creds: '${{ secrets.AZURE_CREDENTIALS }}'
 
-      - name: Deploy bicep
+      - name: Deploy bicep apps
         uses: azure/CLI@v1
         if: github.event_name != 'pull_request'
         with:
@@ -103,7 +103,7 @@ jobs:
           subscriptionId: ${{ secrets.AZURE_SUBSCRIPTION_ID }}
           resourceGroupName: ${{  env.RESOURCE_GROUP }}
           template: src/deploy/loadtest.bicep
-          parameters: name="${{ env.AZURELOADTESTINGNAME }}" location="northeurope"
+          parameters: name='${{ env.AZURELOADTESTINGNAME }}' location='northeurope'
           failOnStdErr: false
 
       # https://github.com/Azure/load-testing
@@ -111,7 +111,7 @@ jobs:
         uses: azure/load-testing@v1
         with:
           resourceGroup: ${{ env.RESOURCE_GROUP }}
-          loadTestResource: "${{ env.AZURELOADTESTINGNAME }}"
+          loadTestResource: '${{ env.AZURELOADTESTINGNAME }}'
           loadTestConfigFile: /src/loadtesting/config.yaml
           env: |
             [
