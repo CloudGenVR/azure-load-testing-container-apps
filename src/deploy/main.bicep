@@ -86,13 +86,6 @@ module appbusiness 'appbusiness.bicep' = {
   }
 }
 
-module azureloadtesting 'loadtest.bicep' = {
-  name: '${deployment().name}--loadtest'
-  params: {
-    name: '${deployment().name}--loadtest'
-    location: location
-  }
-}
 
 
 output appingressFqdn string = appingress.outputs.fqdn
