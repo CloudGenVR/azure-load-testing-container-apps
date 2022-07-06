@@ -22,7 +22,7 @@ env:
   IMAGE_NAME_INGRESS: containerappingress
   IMAGE_NAME_BUSINESS: containerappbusiness
   AZURELOADTESTINGNAME: containerapploadtesting
-  CLUSTERIP: ''
+  
 
 jobs:
   build:
@@ -98,18 +98,3 @@ jobs:
                   containerRegistryPassword=${{ secrets.REGISTRYPASSWORD }} \   
 
                    
-                   
-      # https://github.com/Azure/load-testing
-      - name: 'Create Azure Load Test'
-        uses: azure/load-testing@v1
-        with:
-          resourceGroup: ${{ env.RESOURCE_GROUP }}
-          loadTestResource: "${{ env.AZURELOADTESTINGNAME }}"
-          loadTestConfigFile: src/loadtesting/config.yaml
-          env: |
-            [
-                {
-                "name": "webapp",
-                "value": "${{ env.CLUSTERIP }}"
-                }
-            ]
