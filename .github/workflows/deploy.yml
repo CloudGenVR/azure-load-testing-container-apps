@@ -91,7 +91,7 @@ jobs:
                   appBusinessImage='${{ env.REGISTRY_NAME }}.azurecr.io/${{ env.REPOSITORY_NAME }}/${{ env.IMAGE_NAME_BUSINESS }}:v1' \
                   appBusinessPort=80 \
                   appBusinessExternalIngress=true \
-                  containerRegistry=${{ env.REGISTRY_NAME }} \
+                  containerRegistry=${{ env.REGISTRY }} \
                   containerRegistryUsername=${{ secrets.REGISTRYUSER }} \
                   containerRegistryPassword=${{ secrets.REGISTRYPASSWORD }} \      
              
