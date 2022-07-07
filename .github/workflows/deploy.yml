@@ -97,6 +97,7 @@ jobs:
                   containerRegistryUsername=${{ secrets.REGISTRYUSER }} \
                   containerRegistryPassword=${{ secrets.REGISTRYPASSWORD }} \   
 
+
       - name: Deploy Bicep file Azure Load Testing
         uses: azure/CLI@v1
         with:
