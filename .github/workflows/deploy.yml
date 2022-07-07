@@ -104,6 +104,7 @@ jobs:
             az deployment group create \
               -g ${{ env.RESOURCE_GROUP }} \
               -f src/deploy/loadtest.bicep \
+              -p name=${{ env.AZURELOADTESTINGNAME }}
              
 
       # https://github.com/Azure/load-testing
