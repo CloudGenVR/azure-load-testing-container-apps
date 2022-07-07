@@ -112,7 +112,7 @@ jobs:
         with:
           resourceGroup: ${{ env.RESOURCE_GROUP }}
           loadTestResource: '${{ env.AZURELOADTESTINGNAME }}'
-          loadTestConfigFile: src/loadtesting/config.yaml
+          loadTestConfigFile: ./src/loadtesting/config.yaml
           env: |
             [
                 {
