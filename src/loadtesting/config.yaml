@@ -1,6 +1,6 @@
-testName: Test1
+testName: TestApplication
 testPlan: Test1.jmx
-description: Test1
-engineInstances: 10
+description: Test applicazione
+engineInstances: 1
 failureCriteria:
 - avg(response_time_ms) > 300
