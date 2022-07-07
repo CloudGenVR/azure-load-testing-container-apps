@@ -1,7 +1,5 @@
-
-param name string
-param location string
-
+param location string = resourceGroup().location
+param name string = 'loadtest-${uniqueString(resourceGroup().id)}'
 
 resource symbolicname 'Microsoft.LoadTestService/loadTests@2022-04-15-preview' = {
   name: name

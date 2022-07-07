@@ -100,11 +100,11 @@ jobs:
       - name: Deploy Bicep file Azure Load Testing
         uses: azure/arm-deploy@v1
         with:
-          subscriptionId: ${{ secrets.AZURE_SUBSCRIPTION_ID }}
-          resourceGroupName: ${{  env.RESOURCE_GROUP }}
-          template: src/deploy/loadtest.bicep
-          parameters: name='${{ env.AZURELOADTESTINGNAME }}' location='northeurope'
-          failOnStdErr: false
+          inlineScript: |
+            az deployment group create \
+              -g ${{ env.RESOURCE_GROUP }} \
+              -f src/deploy/loadtest.bicep \
+             
 
       # https://github.com/Azure/load-testing
       - name: 'Create Azure Load Test'
