@@ -86,13 +86,6 @@ module appbusiness 'appbusiness.bicep' = {
   }
 }
 
-module loadTesting 'loadtest.bicep' = {
-  name: '${deployment().name}--lt'  
-  params: {
-    name: '${deployment().name}--lt'  
-    location: location
-  }
-}
 
 
 
