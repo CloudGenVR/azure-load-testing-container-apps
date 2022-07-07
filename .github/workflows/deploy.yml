@@ -98,7 +98,7 @@ jobs:
                   containerRegistryPassword=${{ secrets.REGISTRYPASSWORD }} \   
 
       - name: Deploy Bicep file Azure Load Testing
-        uses: azure/arm-deploy@v1
+        uses: azure/CLI@v1
         with:
           inlineScript: |
             az deployment group create \
