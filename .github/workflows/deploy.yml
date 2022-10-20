@@ -107,7 +107,7 @@ jobs:
               -f src/deploy/loganalytics.bicep \
               -p \
                   name="${{ env.AZURELOGANALYTICSWORKSPACENAME }}" \
-                  location="northeurope \
+                  location="northeurope" \
 
 
       - name: Deploy Bicep file Azure Load Testing
@@ -119,7 +119,7 @@ jobs:
               -f src/deploy/loadtest.bicep \
               -p \
                   name="${{ env.AZURELOADTESTINGNAME }}" \
-                  location="northeurope \
+                  location="northeurope" \
 
       # https://github.com/Azure/load-testing
       - name: 'Create Azure Load Test'
