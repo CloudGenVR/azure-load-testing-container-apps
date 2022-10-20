@@ -78,13 +78,6 @@ jobs:
         uses: azure/login@v1
         with:
           creds: '${{ secrets.AZURE_CREDENTIALS }}'
-      
-      - name: Azure CLI script
-        uses: azure/CLI@v1
-        with:
-          inlineScript: |
-            az account show
-            az storage -h
 
       - name: Deploy bicep apps
         uses: azure/CLI@v1
@@ -111,21 +104,22 @@ jobs:
           inlineScript: |
             az deployment group create \
               -g ${{ env.RESOURCE_GROUP }} \
-              -f src/deploy/main.bicep \
+              -f src/deploy/loganalytics.bicep \
               -p \
                   name="${{ env.AZURELOGANALYTICSWORKSPACENAME }}" \
-                  location="westeurope \
+                  location="northeurope \
 
-    
-      
+
       - name: Deploy Bicep file Azure Load Testing
-        uses: azure/arm-deploy@v1
+        uses: azure/CLI@v1
         with:
-          subscriptionId: ${{ secrets.AZURE_SUBSCRIPTION_ID }}
-          resourceGroupName: ${{ env.RESOURCE_GROUP }}
-          template: ./src/deploy/loadtest.bicep
-          parameters: name="${{ env.AZURELOADTESTINGNAME }}" location="northeurope"
-          failOnStdErr: false
+          inlineScript: |
+            az deployment group create \
+              -g ${{ env.RESOURCE_GROUP }} \
+              -f src/deploy/loadtest.bicep \
+              -p \
+                  name="${{ env.AZURELOADTESTINGNAME }}" \
+                  location="northeurope \
 
       # https://github.com/Azure/load-testing
       - name: 'Create Azure Load Test'
