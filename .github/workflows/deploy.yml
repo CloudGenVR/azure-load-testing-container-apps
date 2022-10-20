@@ -105,16 +105,18 @@ jobs:
                   containerRegistryUsername=${{ secrets.REGISTRYUSER }} \
                   containerRegistryPassword=${{ secrets.REGISTRYPASSWORD }} \   
 
-      
-      - name: Deploy Bicep file Log Analytics workspace
-        uses: azure/arm-deploy@v1
+      - name: Deploy Analytics Workspace
+        uses: azure/CLI@v1
         with:
-          subscriptionId: ${{ secrets.AZURE_SUBSCRIPTION_ID }}
-          resourceGroupName: ${{ env.RESOURCE_GROUP }}
-          template: ./src/deploy/loganalytics.bicep
-          parameters: name="${{ env.AZURELOGANALYTICSWORKSPACENAME }}"  location="westeurope"
-          failOnStdErr: false
+          inlineScript: |
+            az deployment group create \
+              -g ${{ env.RESOURCE_GROUP }} \
+              -f src/deploy/main.bicep \
+              -p \
+                  name="${{ env.AZURELOGANALYTICSWORKSPACENAME }}" \
+                  location="westeurope \
 
+    
       
       - name: Deploy Bicep file Azure Load Testing
         uses: azure/arm-deploy@v1
