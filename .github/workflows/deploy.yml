@@ -15,13 +15,14 @@ on:
 
 
 env:
-  RESOURCE_GROUP: rg-azureday
-  REGISTRY: azureday.azurecr.io
-  REGISTRY_NAME: azureday
-  REPOSITORY_NAME: samplecontainerapp
-  IMAGE_NAME_INGRESS: containerappingress
-  IMAGE_NAME_BUSINESS: containerappbusiness
-  AZURELOADTESTINGNAME: containerapploadtesting
+  RESOURCE_GROUP: "rg-azureday"
+  REGISTRY: "azureday.azurecr.io"
+  REGISTRY_NAME: "azureday"
+  REPOSITORY_NAME: "samplecontainerapp"
+  IMAGE_NAME_INGRESS: "containerappingress"
+  IMAGE_NAME_BUSINESS: "containerappbusiness"
+  AZURELOADTESTINGNAME: "containerapploadtesting"
+  AZURELOGANALYTICSWORKSPACENAME: "DEMOLogAnalyticsWorkspace"
   
 
 jobs:
@@ -97,23 +98,32 @@ jobs:
                   containerRegistryUsername=${{ secrets.REGISTRYUSER }} \
                   containerRegistryPassword=${{ secrets.REGISTRYPASSWORD }} \   
 
-
-      - name: Deploy Bicep file Azure Load Testing
-        uses: azure/CLI@v1
+      
+      - name: Deploy Bicep file Log Analytics workspace
+        uses: azure/arm-deploy@v1
         with:
-          inlineScript: |
-            az deployment group create \
-              -g ${{ env.RESOURCE_GROUP }} \
-              -f src/deploy/loadtest.bicep \
-              -p name=${{ env.AZURELOADTESTINGNAME }}
-             
+          subscriptionId: ${{ secrets.AZURE_SUBSCRIPTION_ID }}
+          resourceGroupName: ${{ secrets.RESOURCE_GROUP }}
+          template: ./src/deploy/loganalytics.bicep
+          parameters: name="${{ env.AZURELOGANALYTICSWORKSPACENAME }}"  location="westeurope"
+          failOnStdErr: false
+
+      
+      - name: Deploy Bicep file Azure Load Testing
+        uses: azure/arm-deploy@v1
+        with:
+          subscriptionId: ${{ secrets.AZURE_SUBSCRIPTION_ID }}
+          resourceGroupName: ${{ secrets.RESOURCE_GROUP }}
+          template: ./src/deploy/loadtest.bicep
+          parameters: name="${{ env.AZURELOADTESTINGNAME }}" location="northeurope"
+          failOnStdErr: false
 
       # https://github.com/Azure/load-testing
       - name: 'Create Azure Load Test'
         uses: azure/load-testing@v1
         with:
-          resourceGroup: ${{ env.RESOURCE_GROUP }}
-          loadTestResource: '${{ env.AZURELOADTESTINGNAME }}'
+          resourceGroup: ${{ secrets.RESOURCE_GROUP }}
+          loadTestResource: "${{ env.AZURELOADTESTINGNAME }}"
           loadTestConfigFile: ./src/loadtesting/config.yaml
           env: |
             [
@@ -121,4 +131,4 @@ jobs:
                 "name": "webapp",
                 "value": "${{ env.CLUSTERIP }}"
                 }
-            ]             
+            ]        
