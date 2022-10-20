@@ -52,7 +52,7 @@ resource containerAppIngress 'Microsoft.App/containerApps@2022-01-01-preview' = 
           env: [
             {
               name: 'Clients__BusinessLogic'
-              value: 'https://appingress-app.blackplant-c0d99cc4.northeurope.azurecontainerapps.io'
+              value: 'https://appbusiness-app.blackplant-c0d99cc4.northeurope.azurecontainerapps.io'
             }
           ]         
         }
