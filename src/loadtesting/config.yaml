@@ -2,5 +2,5 @@ testName: TestApplication
 testPlan: Test1.jmx
 description: Test applicazione
 engineInstances: 1
-failureCriteria:
-- avg(response_time_ms) > 300
+#failureCriteria:
+#- avg(response_time_ms) > 6000
