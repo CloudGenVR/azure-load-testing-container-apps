@@ -96,7 +96,7 @@ jobs:
                   appBusinessExternalIngress=true \
                   containerRegistry=${{ env.REGISTRY }} \
                   containerRegistryUsername=${{ secrets.REGISTRYUSER }} \
-                  containerRegistryPassword=${{ secrets.REGISTRYPASSWORD }} \   
+                  containerRegistryPassword=${{ secrets.REGISTRYPASSWORD }}\   
 
       - name: Deploy Analytics Workspace
         uses: azure/CLI@v1
