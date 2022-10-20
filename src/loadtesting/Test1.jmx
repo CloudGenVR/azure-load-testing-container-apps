@@ -37,9 +37,9 @@
               </elementProp>
             </collectionProp>
           </elementProp>
-          <stringProp name="HTTPSampler.domain">appingress-app.blackplant-c0d99cc4.northeurope.azurecontainerapps.io</stringProp>
+          <stringProp name="HTTPSampler.domain">appingress-app.blackplant-c0d99cc4.northeurope.azurecontainerapps.io/</stringProp>
           <stringProp name="HTTPSampler.port">443</stringProp>
-          <stringProp name="HTTPSampler.protocol">https</stringProp>
+          <stringProp name="HTTPSampler.protocol">http</stringProp>
           <stringProp name="HTTPSampler.contentEncoding"></stringProp>
           <stringProp name="HTTPSampler.path">ping</stringProp>
           <stringProp name="HTTPSampler.method">GET</stringProp>
