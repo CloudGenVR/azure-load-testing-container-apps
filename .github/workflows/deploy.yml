@@ -110,7 +110,7 @@ jobs:
 
       
       - name: Deploy Bicep file Azure Load Testing
-        uses: azure/arm-deploy
+        uses: azure/arm-deploy@v1
         with:
           subscriptionId: ${{ secrets.AZURE_SUBSCRIPTION_ID }}
           resourceGroupName: ${{ env.RESOURCE_GROUP }}
