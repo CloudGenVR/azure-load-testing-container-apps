@@ -113,7 +113,7 @@ jobs:
         uses: azure/arm-deploy@v1
         with:
           subscriptionId: ${{ secrets.AZURE_SUBSCRIPTION_ID }}
-          resourceGroupName: ${{ secrets.RESOURCE_GROUP }}
+          resourceGroupName: ${{ env.RESOURCE_GROUP }}
           template: ./src/deploy/loadtest.bicep
           parameters: name="${{ env.AZURELOADTESTINGNAME }}" location="northeurope"
           failOnStdErr: false
@@ -122,7 +122,7 @@ jobs:
       - name: 'Create Azure Load Test'
         uses: azure/load-testing@v1
         with:
-          resourceGroup: ${{ secrets.RESOURCE_GROUP }}
+          resourceGroup: ${{ env.RESOURCE_GROUP }}
           loadTestResource: "${{ env.AZURELOADTESTINGNAME }}"
           loadTestConfigFile: ./src/loadtesting/config.yaml
           env: |
