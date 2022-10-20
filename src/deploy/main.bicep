@@ -56,17 +56,6 @@ module appingress 'appingress.bicep' = {
         value: containerRegistryPassword
       }
     ]
-    initContainers: [
-      {
-        env: [
-          {
-            name: 'Clients__BusinessLogic'
-            value: appingress.outputs.fqdn
-          }
-        ]
-      
-      }
-    ]
   }
 }
 

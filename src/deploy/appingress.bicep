@@ -49,7 +49,12 @@ resource containerAppIngress 'Microsoft.App/containerApps@2022-01-01-preview' = 
         {
           image: containerImage
           name: containerAppName
-          env: env         
+          env: [
+            {
+              name: 'Clients__BusinessLogic'
+              value: 'https://appingress-app.blackplant-c0d99cc4.northeurope.azurecontainerapps.io'
+            }
+          ]         
         }
       ]
       scale: {
